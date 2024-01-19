@@ -74,3 +74,10 @@ jobs:
       with:
         name: sail.${{ github.sha }}.ios
         path: build/ios/iphoneos/Runner.app
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: build/ios/iphoneos/*
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag_name: v1.0.0
+        release_name: Release v1.0.0
