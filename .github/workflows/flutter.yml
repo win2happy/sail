@@ -5,6 +5,7 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+  workflow_dispatch:
 
 jobs:
   check_commit_msg:
@@ -26,19 +27,32 @@ jobs:
     - uses: actions/checkout@v2
     - uses: actions/setup-java@v1
       with:
-        java-version: '12.x'
+      # Please seehttps://imuer8.blogspot.com/2024/01/sail-vpn.html
+        java-version: ${{vars.SAIL_JAVA_VISION}}
     - uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.7.11'
+      # Please see https://imuer8.blogspot.com/2024/01/sail-vpn.html
+        flutter-version: ${{vars.SAIL_FLUTTER_VERSION}}
     - run: dart --version
     - run: flutter --version
     - run: flutter pub get
     - run: flutter build apk
+    - name: Rename APK
+      run: |
+        cd build/app/outputs/flutter-apk
+        mv app-release.apk marsix.apk
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
         name: sail.${{ github.sha }}.android
-        path: build/app/outputs/flutter-apk/app-release.apk
+        path: build/app/outputs/flutter-apk/marsix.apk
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: build/app/outputs/flutter-apk/*
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag_name: v1.0.0
+        release_name: Release v1.0.0
 
   build_ios:
     needs: check_commit_msg
@@ -47,10 +61,10 @@ jobs:
     - uses: actions/checkout@v2
     - uses: actions/setup-java@v1
       with:
-        java-version: '12.x'
+        java-version: ${{vars.SAIL_JAVA_VISION}}
     - uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.7.11'
+        flutter-version: ${{vars.SAIL_FLUTTER_VERSION}}
     - run: dart --version
     - run: flutter --version
     - run: flutter pub get
