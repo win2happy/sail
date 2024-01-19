@@ -71,17 +71,17 @@ jobs:
     - run: flutter build ios --release --no-codesign
     - name: Rename ios
       run: |
-        cd build/ios/iphoneos
+        cd /Users/runner/work/sail/sail/build/ios/iphoneos
         mv Runner.app marsix.app
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
         name: sail.${{ github.sha }}.ios
-        path: build/ios/iphoneos/marsix.app
+        path: /Users/runner/work/sail/sail/build/ios/iphoneos/marsix.app
     - name: Create Release
       uses: softprops/action-gh-release@v1
       with:
-        files: build/ios/iphoneos/*
+        files: /Users/runner/work/sail/sail/build/ios/iphoneos/*
         token: ${{ secrets.GITHUB_TOKEN }}
         tag_name: v1.0.0
         release_name: Release v1.0.0
