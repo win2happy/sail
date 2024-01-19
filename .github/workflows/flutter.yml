@@ -1,8 +1,8 @@
 name: Flutter
 
 on:
-  push:
-    branches: [ main, master ]
+  # push:
+    # branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
   workflow_dispatch:
@@ -69,11 +69,15 @@ jobs:
     - run: flutter --version
     - run: flutter pub get
     - run: flutter build ios --release --no-codesign
+    - name: Rename ios
+      run: |
+        cd build/ios/iphoneos
+        mv Runner.app marsix.app
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
         name: sail.${{ github.sha }}.ios
-        path: build/ios/iphoneos/Runner.app
+        path: build/ios/iphoneos/marsix.app
     - name: Create Release
       uses: softprops/action-gh-release@v1
       with:
